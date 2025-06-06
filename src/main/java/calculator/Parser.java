@@ -161,7 +161,7 @@ public class Parser {
 
     private boolean isAssignmentOperator(Token token) {
         return switch (token.type) {
-            case ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MUL_ASSIGN, DIV_ASSIGN -> true;
+            case ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MUL_ASSIGN, DIV_ASSIGN, MODULO_ASSIGN -> true;
             default -> false;
         };
     }

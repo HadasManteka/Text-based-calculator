@@ -92,7 +92,7 @@ public class Lexer {
 
     private void handleModulo() {
         if (peek() == '=') {
-            tokens.add(new Token(TokenType.MUL_ASSIGN, "%="));
+            tokens.add(new Token(TokenType.MODULO_ASSIGN, "%="));
             pos += 2;
         } else {
             tokens.add(new Token(TokenType.MODULO, "%"));
