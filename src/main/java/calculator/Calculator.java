@@ -1,5 +1,4 @@
 package calculator;
-// Calculator.java
 
 import calculator.expression.IExpression;
 import calculator.lexer.Lexer;
@@ -19,7 +18,7 @@ public class Calculator {
     }
 
     /**
-     * Processes a single line of input (an assignment expression).
+     * Processes a single line of input - an assignment expression
      */
     public double evaluateLine(String line) {
         Lexer lexer = new Lexer(line);

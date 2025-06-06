@@ -1,7 +1,7 @@
 package calculator;
 
 import calculator.exception.ParserException;
-import calculator.expression.BinaryExpr;
+import calculator.expression.binary.BinaryExpr;
 import calculator.expression.IExpression;
 import calculator.expression.NumberExpr;
 import calculator.expression.assign.AssignExpression;

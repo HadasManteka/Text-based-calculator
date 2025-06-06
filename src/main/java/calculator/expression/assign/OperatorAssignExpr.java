@@ -2,7 +2,6 @@ package calculator.expression.assign;
 
 import calculator.Context;
 import calculator.expression.IExpression;
-import calculator.expression.OperatorFactory;
 import calculator.lexer.Token;
 
 public class OperatorAssignExpr extends AssignExpression{
@@ -15,7 +14,7 @@ public class OperatorAssignExpr extends AssignExpression{
 
     @Override
     public double evaluate(Context context) {
-        double val = OperatorFactory.getAssignOperator(operator.type)
+        double val = AssignOperatorFactory.getAssignOperator(operator.type)
                         .apply(context.get(name), expr.evaluate(context));
         context.set(name, val);
         return val;

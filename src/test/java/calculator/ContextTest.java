@@ -16,9 +16,9 @@ public class ContextTest {
         context = new Context();
     }
 
-    @Test
-    public void testGetDefaultValue() {
-        assertEquals(0.0, context.get("unknown key"), 0.0001);
+    @Test(expected=RuntimeException.class)
+    public void testGetUnknownValue() {
+        context.get("unknown key");
     }
 
     @Test

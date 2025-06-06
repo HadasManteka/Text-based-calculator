@@ -3,6 +3,7 @@ package calculator;
 import calculator.exception.ParserException;
 import calculator.expression.*;
 import calculator.expression.assign.*;
+import calculator.expression.binary.BinaryExpr;
 import calculator.expression.unary.*;
 import calculator.lexer.Token;
 import calculator.lexer.TokenType;
@@ -47,40 +48,38 @@ public class Parser {
      * Assignment operators
      */
     private IExpression parseAssignment() {
-        IExpression left = parseAddSub();
+        IExpression left = parseAdditive();
 
-        if (left instanceof VariableExpr) {
-            Token token = peek();
+        if (!(left instanceof VariableExpr)) {
+            return left;
+        }
 
-            if (token.type == TokenType.ASSIGN ||
-                    token.type == TokenType.PLUS_ASSIGN ||
-                    token.type == TokenType.MINUS_ASSIGN) {
+        Token token = peek();
+        if (isAssignmentOperator(token)) {
+            next(); // consume the assignment operator
+            IExpression right = parseExpression();
+            String variableName = ((VariableExpr) left).getName();
 
-                next();
-                IExpression right = parseExpression();
-
-                if (token.type == TokenType.ASSIGN) {
-                    return new AssignExpression(((VariableExpr) left).getName(), right);
-                } else {
-                    return new OperatorAssignExpr(((VariableExpr) left).getName(), right, token);
-                }
+            if (token.type == TokenType.ASSIGN) {
+                return new AssignExpression(variableName, right);
+            } else {
+                return new OperatorAssignExpr(variableName, right, token);
             }
         }
 
         return left;
     }
 
-
     /*
      * Unary: add, sub
      */
-    private IExpression parseAddSub() {
-        IExpression left = parseMulDiv();
+    private IExpression parseAdditive() {
+        IExpression left = parseTerm();
         Token token = peek();
 
-        while (token.type == TokenType.PLUS || token.type == TokenType.MINUS) {
+        while (isAdditiveOperator(token)) {
             Token operator = next();
-            IExpression right = parseMulDiv();
+            IExpression right = parseTerm();
             left = new BinaryExpr(left, right, operator);
             token = peek();
         }
@@ -89,12 +88,12 @@ public class Parser {
     }
 
     /*
-     * Binary: mul, div
+     * Binary: mul, div, modulo
      */
-    private IExpression parseMulDiv() {
+    private IExpression parseTerm() {
         IExpression left = parseUnary();
         Token token = peek();
-        while (token.type == TokenType.MUL || token.type == TokenType.DIV) {
+        while (isTermOperator(token)) {
             Token operator = next();
             IExpression right = parseUnary();
             left = new BinaryExpr(left, right, operator);
@@ -110,7 +109,7 @@ public class Parser {
         Token token = peek();
 
         // Prefix
-        if (token.type == TokenType.INCREMENT || token.type == TokenType.DECREMENT) {
+        if (isUnaryOperator(token)) {
             Token operator = next();
             Token nextToken = peek();
             if (nextToken.type == TokenType.IDENTIFIER) {
@@ -126,7 +125,7 @@ public class Parser {
 
         // Postfix
         Token after = peek();
-        if (after.type == TokenType.INCREMENT || after.type == TokenType.DECREMENT) {
+        if (isUnaryOperator(after)) {
             Token operator = next();
             if (expr instanceof VariableExpr) {
                 return new PostfixExpr(((VariableExpr) expr).getName(), operator);
@@ -158,5 +157,33 @@ public class Parser {
             default:
                 throw new ParserException("Unexpected token " + token.value);
         }
+    }
+
+    private boolean isAssignmentOperator(Token token) {
+        return switch (token.type) {
+            case ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, MUL_ASSIGN, DIV_ASSIGN -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isUnaryOperator(Token token) {
+        return switch (token.type) {
+            case DECREMENT, INCREMENT -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isTermOperator(Token token) {
+        return switch (token.type) {
+            case MUL, DIV, MODULO -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isAdditiveOperator(Token token) {
+        return switch (token.type) {
+            case PLUS, MINUS -> true;
+            default -> false;
+        };
     }
 }

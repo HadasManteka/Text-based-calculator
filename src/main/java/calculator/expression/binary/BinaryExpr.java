@@ -1,7 +1,7 @@
-package calculator.expression;
+package calculator.expression.binary;
 
 import calculator.Context;
-import calculator.exception.RuntimeEvaluatorException;
+import calculator.expression.IExpression;
 import calculator.lexer.Token;
 
 
@@ -17,7 +17,7 @@ public class BinaryExpr implements IExpression {
         double leftVal = left.evaluate(context);
         double rightVal = right.evaluate(context);
 
-        return OperatorFactory.getBinaryOperator(operator.type).apply(leftVal, rightVal);
+        return BinaryOperatorFactory.getBinaryOperator(operator.type).apply(leftVal, rightVal);
     }
 
     public IExpression getLeft() {

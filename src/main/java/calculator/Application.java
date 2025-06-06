@@ -26,11 +26,8 @@ public class Application {
 
             try {
                 calculator.evaluateLine(inputLine);
-//                System.out.println("  Expression evaluated successfully.");
-//            } catch (Exception e) {
-//                System.err.println("  Error: " + e.getMessage());
             } catch (Exception e) {
-                System.err.println("  An unexpected error occurred: " + e.getMessage());
+                System.err.println("An unexpected error occurred: " + e.getMessage());
             }
 
             calculator.printAllVariables();
