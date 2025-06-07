@@ -1,12 +1,13 @@
-package calculator.expression;
+package calculator.expression.binary;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
 import calculator.Context;
-import calculator.expression.binary.BinaryExpr;
+import calculator.exception.RuntimeEvaluatorException;
+import calculator.expression.NumberExpr;
 import calculator.lexer.Token;
 import calculator.lexer.TokenType;
-import calculator.exception.RuntimeEvaluatorException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class BinaryExprTest {
 
@@ -18,7 +19,7 @@ public class BinaryExprTest {
                 new Token(TokenType.PLUS, "+")
         );
         double result = expr.evaluate(new Context());
-        assertEquals(7.0, result, 0.0001);
+        assertEquals(7.0, result, 0.0);
     }
 
     @Test
@@ -29,7 +30,18 @@ public class BinaryExprTest {
                 new Token(TokenType.DIV, "/")
         );
         double result = expr.evaluate(new Context());
-        assertEquals(5.0, result, 0.0001);
+        assertEquals(5.0, result, 0.0);
+    }
+
+    @Test
+    public void testModulo() {
+        BinaryExpr expr = new BinaryExpr(
+                new NumberExpr(10),
+                new NumberExpr(3),
+                new Token(TokenType.MODULO, "%")
+        );
+        double result = expr.evaluate(new Context());
+        assertEquals(1.0, result, 0.0);
     }
 
     @Test(expected = RuntimeEvaluatorException.class)
